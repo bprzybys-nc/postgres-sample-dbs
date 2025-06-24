@@ -1,0 +1,179 @@
+# monitoring/database-monitors/postgres_air_monitor.yaml
+# Datadog monitoring configuration for postgres_air database
+# Scenario: LOGIC_HEAVY | Criticality: CRITICAL
+
+api_version: v1
+kind: Monitor
+metadata:
+  name: "postgres_air-database-connection-monitor"
+  tags:
+    - "database:postgres_air"
+    - "scenario:logic_heavy"
+    - "criticality:critical"
+    - "environment:multi"
+    - "service:database-monitoring"
+    - "team:operations_team"
+
+spec:
+  # Database connection monitoring
+  type: "query alert"
+
+  query: |
+    max(last_30m):max:postgresql.connections.active{database:postgres_air} by {host}
+
+  name: "Postgres_Air Database - Unused Connection Alert"
+
+  message: |
+    **🔍 Database Decommissioning Candidate Detected**
+
+    Database: postgres_air
+    Scenario Type: LOGIC_HEAVY
+    Criticality: CRITICAL
+
+    **Alert Details:**
+    - No active connections detected for {{#is_alert}}{{ value }}{{/is_alert}} seconds
+    - Threshold: 86400 seconds (1.0 days)
+    - Owner: operations-team@company.com
+
+    **Next Steps:**
+    ⚠️ **CRITICAL DATABASE** - Manual review required before any action
+    
+    
+
+    **Decommissioning Workflow:**
+    1. Verify no hidden dependencies
+    2. Contact owner: operations-team@company.com
+    3. Create GitHub issue for manual review
+    4. Document decision and rationale
+
+    **Infrastructure References:**
+    - Terraform: terraform/environments/*/{database_name}*
+    - Helm Charts: helm-charts/postgres_air/
+    - Monitoring: monitoring/database-monitors/postgres_air_monitor.yaml
+
+    @operations-team@company.com @database-team@company.com
+
+  # Alert thresholds
+  options:
+    thresholds:
+      critical: 86400
+      warning: 43200
+      warning_recovery: 34560.0
+      critical_recovery: 69120.0
+
+    # Notification settings
+    notify_audit: true
+    require_full_window: true
+    new_host_delay: 300
+    evaluation_delay: 900  # 15 minutes
+
+    # Escalation policy
+    escalation_message: |
+      **ESCALATION: Unused Database Alert**
+
+      Database postgres_air has been without connections for an extended period.
+      This is a CRITICAL system requiring immediate review.
+
+      Please review for potential decommissioning.
+
+    # Advanced configuration
+    include_tags: true
+    no_data_timeframe: 1440  # 24 hours
+    notify_no_data: true
+
+    # Silencing options for maintenance
+    silenced:
+      "*": null  # No permanent silencing
+
+  # Additional database-specific monitoring
+  additional_checks:
+    - name: "connection_count"
+      query: "avg(last_15m):avg:postgresql.connections.active{database:postgres_air}"
+      thresholds:
+        warning: 1
+        critical: 0
+
+    - name: "query_activity" 
+      query: "sum(last_1h):sum:postgresql.queries.count{database:postgres_air}"
+      thresholds:
+        warning: 10
+        critical: 0
+
+    - name: "last_activity"
+      query: "max(last_24h):max:postgresql.activity.last_query_time{database:postgres_air}"
+      thresholds:
+        critical: 86400
+
+# Custom metrics for decommissioning workflow
+custom_metrics:
+  - metric_name: "database.decommissioning.candidate"
+    description: "Flag database as decommissioning candidate"
+    tags:
+      - "database:postgres_air"
+      - "scenario:logic_heavy"
+      - "auto_review:false"
+      - "manual_review:true"
+
+  - metric_name: "database.connection.idle_days"
+    description: "Number of days since last connection"
+    unit: "days"
+    tags:
+      - "database:postgres_air"
+      - "threshold_days:1"
+
+# Dashboard integration
+dashboard_widgets:
+  - widget_type: "timeseries"
+    title: "Postgres_Air Connection Activity"
+    definition:
+      requests:
+        - q: "avg:postgresql.connections.active{database:postgres_air}"
+          display_type: "line"
+      yaxis:
+        min: 0
+        max: 100
+      markers:
+        - value: 24.0  # Show threshold as marker
+          display_type: "error dashed"
+          label: "Decommissioning Threshold"
+
+# Integration with GitHub for issue creation
+github_integration:
+  repository: "company/database-decommissioning"
+  issue_template: |
+    ## Database Decommissioning Review: postgres_air
+
+    **Database Information:**
+    - Name: postgres_air
+    - Scenario: LOGIC_HEAVY
+    - Criticality: CRITICAL
+    - Owner: operations-team@company.com
+
+    **Alert Details:**
+    - No connections for {connection_threshold/86400:.0f} days
+    - Last activity: {last_activity_timestamp}
+
+    **Required Actions:**
+    - [ ] Verify no hidden dependencies
+    - [ ] Check application logs for references
+    - [ ] Contact database owner
+    - [ ] Review business logic impact
+    - [ ] Document decommissioning decision
+
+    **Owner:** @operations-team
+    **Labels:** database-decommissioning, logic_heavy, critical
+
+# Webhook for automated workflows
+webhooks:
+  - name: "decommissioning_workflow"
+    url: "https://automation.company.com/database-decommissioning/webhook"
+    payload: |
+      {
+        "database_name": "postgres_air",
+        "scenario_type": "LOGIC_HEAVY",
+        "criticality": "CRITICAL",
+        "owner_email": "operations-team@company.com",
+        "alert_timestamp": "{{alert_timestamp}}",
+        "metric_value": "{{value}}",
+        "requires_manual_review": true
+      }

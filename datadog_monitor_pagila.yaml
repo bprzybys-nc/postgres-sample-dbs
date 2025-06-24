@@ -1,0 +1,179 @@
+# monitoring/database-monitors/pagila_monitor.yaml
+# Datadog monitoring configuration for pagila database
+# Scenario: MIXED | Criticality: MEDIUM
+
+api_version: v1
+kind: Monitor
+metadata:
+  name: "pagila-database-connection-monitor"
+  tags:
+    - "database:pagila"
+    - "scenario:mixed"
+    - "criticality:medium"
+    - "environment:multi"
+    - "service:database-monitoring"
+    - "team:development_team"
+
+spec:
+  # Database connection monitoring
+  type: "query alert"
+
+  query: |
+    max(last_30m):max:postgresql.connections.active{database:pagila} by {host}
+
+  name: "Pagila Database - Unused Connection Alert"
+
+  message: |
+    **🔍 Database Decommissioning Candidate Detected**
+
+    Database: pagila
+    Scenario Type: MIXED
+    Criticality: MEDIUM
+
+    **Alert Details:**
+    - No active connections detected for {{#is_alert}}{{ value }}{{/is_alert}} seconds
+    - Threshold: 259200 seconds (3.0 days)
+    - Owner: development-team@company.com
+
+    **Next Steps:**
+    
+    📊 Mixed scenario - Check service layer dependencies
+    
+
+    **Decommissioning Workflow:**
+    1. Verify no hidden dependencies
+    2. Contact owner: development-team@company.com
+    3. Evaluate for removal
+    4. Document decision and rationale
+
+    **Infrastructure References:**
+    - Terraform: terraform/environments/*/{database_name}*
+    - Helm Charts: helm-charts/pagila/
+    - Monitoring: monitoring/database-monitors/pagila_monitor.yaml
+
+    @development-team@company.com @database-team@company.com
+
+  # Alert thresholds
+  options:
+    thresholds:
+      critical: 259200
+      warning: 172800
+      warning_recovery: 138240.0
+      critical_recovery: 207360.0
+
+    # Notification settings
+    notify_audit: true
+    require_full_window: true
+    new_host_delay: 300
+    evaluation_delay: 900  # 15 minutes
+
+    # Escalation policy
+    escalation_message: |
+      **ESCALATION: Unused Database Alert**
+
+      Database pagila has been without connections for an extended period.
+      
+
+      Please review for potential decommissioning.
+
+    # Advanced configuration
+    include_tags: true
+    no_data_timeframe: 1440  # 24 hours
+    notify_no_data: true
+
+    # Silencing options for maintenance
+    silenced:
+      "*": null  # No permanent silencing
+
+  # Additional database-specific monitoring
+  additional_checks:
+    - name: "connection_count"
+      query: "avg(last_15m):avg:postgresql.connections.active{database:pagila}"
+      thresholds:
+        warning: 1
+        critical: 0
+
+    - name: "query_activity" 
+      query: "sum(last_1h):sum:postgresql.queries.count{database:pagila}"
+      thresholds:
+        warning: 10
+        critical: 0
+
+    - name: "last_activity"
+      query: "max(last_24h):max:postgresql.activity.last_query_time{database:pagila}"
+      thresholds:
+        critical: 259200
+
+# Custom metrics for decommissioning workflow
+custom_metrics:
+  - metric_name: "database.decommissioning.candidate"
+    description: "Flag database as decommissioning candidate"
+    tags:
+      - "database:pagila"
+      - "scenario:mixed"
+      - "auto_review:false"
+      - "manual_review:false"
+
+  - metric_name: "database.connection.idle_days"
+    description: "Number of days since last connection"
+    unit: "days"
+    tags:
+      - "database:pagila"
+      - "threshold_days:3"
+
+# Dashboard integration
+dashboard_widgets:
+  - widget_type: "timeseries"
+    title: "Pagila Connection Activity"
+    definition:
+      requests:
+        - q: "avg:postgresql.connections.active{database:pagila}"
+          display_type: "line"
+      yaxis:
+        min: 0
+        max: 100
+      markers:
+        - value: 72.0  # Show threshold as marker
+          display_type: "error dashed"
+          label: "Decommissioning Threshold"
+
+# Integration with GitHub for issue creation
+github_integration:
+  repository: "company/database-decommissioning"
+  issue_template: |
+    ## Database Decommissioning Review: pagila
+
+    **Database Information:**
+    - Name: pagila
+    - Scenario: MIXED
+    - Criticality: MEDIUM
+    - Owner: development-team@company.com
+
+    **Alert Details:**
+    - No connections for {connection_threshold/86400:.0f} days
+    - Last activity: {last_activity_timestamp}
+
+    **Required Actions:**
+    - [ ] Verify no hidden dependencies
+    - [ ] Check application logs for references
+    - [ ] Contact database owner
+    - [ ] Confirm safe removal
+    - [ ] Document decommissioning decision
+
+    **Owner:** @development-team
+    **Labels:** database-decommissioning, mixed, medium
+
+# Webhook for automated workflows
+webhooks:
+  - name: "decommissioning_workflow"
+    url: "https://automation.company.com/database-decommissioning/webhook"
+    payload: |
+      {
+        "database_name": "pagila",
+        "scenario_type": "MIXED",
+        "criticality": "MEDIUM",
+        "owner_email": "development-team@company.com",
+        "alert_timestamp": "{{alert_timestamp}}",
+        "metric_value": "{{value}}",
+        "requires_manual_review": false
+      }
