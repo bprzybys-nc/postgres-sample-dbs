@@ -1,0 +1,8 @@
+# This is a simplified values.yaml for demonstration purposes.
+
+postgres:
+  databases:
+    - "chinook"
+    - "pagila"
+    - "happiness_index"
+    - "unused_db"
