@@ -1,1 +1,0 @@
--- This file has been decommissioned as part of the periodic_table database decommissioning.
