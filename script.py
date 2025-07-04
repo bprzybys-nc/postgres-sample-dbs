@@ -42,7 +42,7 @@ resource "random_password" "db_admin_password" {
 }
 
 # Config-Only Scenario: Periodic Table Database
-resource "azurerm_postgresql_flexible_server" "periodic_table" {
+# resource "azurerm_postgresql_flexible_server" "periodic_table" { (removed as part of periodic_table decommission)
   name                   = "psql-periodic-table-dev"
   resource_group_name    = azurerm_resource_group.dev_databases.name
   location              = azurerm_resource_group.dev_databases.location
@@ -71,9 +71,9 @@ resource "azurerm_postgresql_flexible_server" "periodic_table" {
   depends_on = [azurerm_private_dns_zone_virtual_network_link.database_dns_link]
 }
 
-resource "azurerm_postgresql_flexible_server_database" "periodic_table_db" {
-  name      = "periodic_table"
-  server_id = azurerm_postgresql_flexible_server.periodic_table.id
+# resource "azurerm_postgresql_flexible_server_database" "periodic_table_db" { (removed as part of periodic_table decommission)
+  # name      = "periodic_table" (removed)
+  # server_id = azurerm_postgresql_flexible_server.periodic_table.id (removed)
   collation = "en_US.utf8"
   charset   = "utf8"
 }
@@ -204,8 +204,8 @@ resource "azurerm_private_dns_zone_virtual_network_link" "database_dns_link" {
 }
 
 # Output connection strings for monitoring and testing
-output "periodic_table_connection_string" {
-  value = "postgresql://${azurerm_postgresql_flexible_server.periodic_table.administrator_login}@${azurerm_postgresql_flexible_server.periodic_table.fqdn}:5432/periodic_table"
+# output "periodic_table_connection_string" { (removed as part of periodic_table decommission)
+  # value = "postgresql://${azurerm_postgresql_flexible_server.periodic_table.administrator_login}@${azurerm_postgresql_flexible_server.periodic_table.fqdn}:5432/periodic_table" (removed)
   sensitive = false
 }
 

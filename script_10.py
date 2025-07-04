@@ -9,7 +9,7 @@ This document provides comprehensive ownership information for all databases in 
 
 | Database | Scenario Type | Criticality | Owner Team | Contact Email | Last Used | Decommissioning Risk |
 |----------|---------------|-------------|------------|---------------|-----------|---------------------|
-| periodic_table | CONFIG_ONLY | LOW | Chemistry Team | chemistry-team@company.com | 2024-02-20 | HIGH |
+
 | world_happiness | CONFIG_ONLY | LOW | Analytics Team | analytics-team@company.com | 2024-01-30 | HIGH |
 | titanic | CONFIG_ONLY | LOW | Data Science Team | data-science-team@company.com | 2024-02-10 | HIGH |
 | pagila | MIXED | MEDIUM | Development Team | development-team@company.com | 2024-04-15 | MEDIUM |
@@ -28,7 +28,7 @@ This document provides comprehensive ownership information for all databases in 
 - Safe for automated removal after approval
 - Minimal business impact
 
-**Examples:** periodic_table, world_happiness, titanic
+**Examples:** world_happiness, titanic
 
 **Decommissioning Process:**
 1. Automated monitoring detects 30+ days of inactivity

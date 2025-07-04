@@ -66,10 +66,10 @@ Installed size is measured using the query: `SELECT pg_size_pretty(pg_database_s
 
 A table containing data about the periodic table of elements.
 
-1. Create a `periodic_table` database:
+
 
     ```sql
-    CREATE DATABASE periodic_table;
+
     ```
 
 2. Download the source file:
@@ -77,7 +77,7 @@ A table containing data about the periodic table of elements.
     <CodeBlock shouldWrap>
 
     ```bash
-    wget https://raw.githubusercontent.com/neondatabase/postgres-sample-dbs/main/periodic_table.sql
+
     ```
 
     </CodeBlock>
@@ -87,21 +87,21 @@ A table containing data about the periodic table of elements.
     <CodeBlock shouldWrap>
 
     ```bash
-    psql -d "postgres://<user>:<password>@<hostname>/periodic_table" -f periodic_table.sql
+
     ```
 
     </CodeBlock>
 
-4. Connect to the `periodic_table` database:
+
 
     ```bash
-    psql postgres://<user>:<password>@<hostname>/periodic_table
+
     ```
 
 5. Look up the the element with the Atomic Number 10:
 
     ```sql
-    SELECT * FROM periodic_table WHERE "AtomicNumber" = 10;
+
     ```
 
 - Source: [https://github.com/andrejewski/periodic-table](https://github.com/andrejewski/periodic-table)
