@@ -1,4 +1,4 @@
-# helm-charts/periodic_table/values.yaml
+# [REMOVED] periodic_table Helm values - decommissioned
 # Kubernetes deployment configuration for periodic_table database
 # Scenario: CONFIG_ONLY | Criticality: LOW
 

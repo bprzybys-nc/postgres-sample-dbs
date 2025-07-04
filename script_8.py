@@ -199,7 +199,7 @@ webhooks:
 # Create monitoring configurations for all databases
 databases_config = [
     # Config-Only scenarios
-    ("periodic_table", "CONFIG_ONLY", "chemistry-team@company.com", "LOW"),
+    # [REMOVED] periodic_table decommissioned
     ("world_happiness", "CONFIG_ONLY", "analytics-team@company.com", "LOW"),
     ("titanic", "CONFIG_ONLY", "data-science-team@company.com", "LOW"),
     # Mixed scenarios

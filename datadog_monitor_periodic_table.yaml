@@ -1,4 +1,4 @@
-# monitoring/database-monitors/periodic_table_monitor.yaml
+# [REMOVED] periodic_table Datadog monitor - decommissioned
 # Datadog monitoring configuration for periodic_table database
 # Scenario: CONFIG_ONLY | Criticality: LOW
 

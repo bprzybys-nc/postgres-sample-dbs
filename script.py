@@ -42,7 +42,7 @@ resource "random_password" "db_admin_password" {
 }
 
 # Config-Only Scenario: Periodic Table Database
-resource "azurerm_postgresql_flexible_server" "periodic_table" {
+# [REMOVED] periodic_table database resource - decommissioned
   name                   = "psql-periodic-table-dev"
   resource_group_name    = azurerm_resource_group.dev_databases.name
   location              = azurerm_resource_group.dev_databases.location
@@ -71,7 +71,7 @@ resource "azurerm_postgresql_flexible_server" "periodic_table" {
   depends_on = [azurerm_private_dns_zone_virtual_network_link.database_dns_link]
 }
 
-resource "azurerm_postgresql_flexible_server_database" "periodic_table_db" {
+# [REMOVED] periodic_table_db resource - decommissioned
   name      = "periodic_table"
   server_id = azurerm_postgresql_flexible_server.periodic_table.id
   collation = "en_US.utf8"
@@ -204,7 +204,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "database_dns_link" {
 }
 
 # Output connection strings for monitoring and testing
-output "periodic_table_connection_string" {
+# [REMOVED] periodic_table connection string output - decommissioned
   value = "postgresql://${azurerm_postgresql_flexible_server.periodic_table.administrator_login}@${azurerm_postgresql_flexible_server.periodic_table.fqdn}:5432/periodic_table"
   sensitive = false
 }
@@ -226,4 +226,4 @@ with open("terraform_dev_databases.tf", "w") as f:
 
 print("✅ Created Terraform configuration for dev databases (Config-Only scenario)")
 print("File: terraform/environments/dev/databases.tf")
-print("Contains: periodic_table, world_happiness, titanic databases")
+print("Contains: world_happiness, titanic databases")

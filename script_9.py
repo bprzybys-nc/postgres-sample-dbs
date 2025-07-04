@@ -305,7 +305,7 @@ healthChecks:
 databases_helm_config = [
     # Config-Only scenarios
     (
-        "periodic_table",
+        # [REMOVED] periodic_table decommissioned
         "CONFIG_ONLY",
         "LOW",
         "Chemical elements reference database for chemistry applications",
