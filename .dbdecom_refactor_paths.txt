@@ -1,0 +1,4 @@
+periodic_table.sql
+helm_values_periodic_table.yaml
+datadog_monitor_periodic_table.yaml
+terraform_dev_databases.tf

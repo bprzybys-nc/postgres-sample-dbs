@@ -40,36 +40,6 @@ resource "random_password" "db_admin_password" {
   special = true
 }
 
-# Config-Only Scenario: Periodic Table Database
-resource "azurerm_postgresql_flexible_server" "periodic_table" {
-  name                   = "psql-periodic-table-dev"
-  resource_group_name    = azurerm_resource_group.dev_databases.name
-  location              = azurerm_resource_group.dev_databases.location
-  version               = "14"
-  delegated_subnet_id   = azurerm_subnet.database_subnet.id
-  private_dns_zone_id   = azurerm_private_dns_zone.database_dns.id
-  administrator_login    = "dbadmin"
-  administrator_password = random_password.db_admin_password.result
-
-  storage_mb = 32768
-  sku_name   = "B_Standard_B1ms"
-
-  backup_retention_days        = 7
-  geo_redundant_backup_enabled = false
-
-  tags = {
-    Environment = "Development"
-    Purpose     = "Config-Only Testing"
-    Owner       = "chemistry-team@company.com"
-    LastUsed    = "2024-02-20"  # 30+ days ago
-    Criticality = "LOW"
-    Scenario    = "CONFIG_ONLY"
-    DataSize    = "Small"
-  }
-
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.database_dns_link]
-}
-
 resource "azurerm_postgresql_flexible_server_database" "periodic_table_db" {
   name      = "periodic_table"
   server_id = azurerm_postgresql_flexible_server.periodic_table.id
@@ -203,11 +173,6 @@ resource "azurerm_private_dns_zone_virtual_network_link" "database_dns_link" {
 }
 
 # Output connection strings for monitoring and testing
-output "periodic_table_connection_string" {
-  value = "postgresql://${azurerm_postgresql_flexible_server.periodic_table.administrator_login}@${azurerm_postgresql_flexible_server.periodic_table.fqdn}:5432/periodic_table"
-  sensitive = false
-}
-
 output "world_happiness_connection_string" {
   value = "postgresql://${azurerm_postgresql_flexible_server.world_happiness.administrator_login}@${azurerm_postgresql_flexible_server.world_happiness.fqdn}:5432/world_happiness"
   sensitive = false
