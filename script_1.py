@@ -47,148 +47,108 @@ resource "azurerm_postgresql_flexible_server" "employees" {
   name                   = "psql-employees-prod"
   resource_group_name    = azurerm_resource_group.prod_critical_databases.name
   location              = azurerm_resource_group.prod_critical_databases.location
-  version               = "14"
-  delegated_subnet_id   = azurerm_subnet.prod_database_subnet.id
-  private_dns_zone_id   = azurerm_private_dns_zone.prod_database_dns.id
+  version                = "13"
+  sku_name               = "Standard_D4s_v3"
+  storage_mb             = 65536 # 64 GB
+  backup_retention_days  = 35
+  geo_redundant_backup_enabled = true
+  zone                   = "1"
+  delegated_subnet_id    = azurerm_subnet.prod_database_subnet.id
+  private_dns_zone_id    = azurerm_private_dns_zone.prod_database_dns.id
   administrator_login    = "dbadmin"
   administrator_password = random_password.prod_db_admin_password.result
-
-  storage_mb = 1048576  # 1TB for large dataset
-  sku_name   = "GP_Standard_D4s_v3"  # High performance
-
-  backup_retention_days        = 35
-  geo_redundant_backup_enabled = true
-  high_availability_enabled    = true
+  public_network_access_enabled = false
 
   tags = {
-    Environment = "Production"
-    Purpose     = "Payroll & HR System"
-    Owner       = "hr-team@company.com"
-    LastUsed    = "2025-06-24"  # Active usage
-    Criticality = "CRITICAL"
-    Scenario    = "LOGIC_HEAVY"
-    DataSize    = "Large"
-    BusinessImpact = "Multi-million dollar payroll operations"
-    RequiresManualReview = "true"
-    ComplianceRequirement = "SOX, GDPR"
+    DatabaseName = "employees"
+    Scenario     = "LOGIC_HEAVY"
+    Criticality  = "HIGH"
   }
-
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.prod_database_dns_link]
 }
 
 resource "azurerm_postgresql_flexible_server_database" "employees_db" {
   name      = "employees"
   server_id = azurerm_postgresql_flexible_server.employees.id
-  collation = "en_US.utf8"
-  charset   = "utf8"
+  charset   = "UTF8"
+  collation = "en_US.UTF8"
 }
 
-# Logic-Heavy Scenario: Lego Database (Business Intelligence)
+# Logic-Heavy Scenario: LEGO Database (Business Intelligence)
 resource "azurerm_postgresql_flexible_server" "lego" {
   name                   = "psql-lego-prod"
   resource_group_name    = azurerm_resource_group.prod_critical_databases.name
   location              = azurerm_resource_group.prod_critical_databases.location
-  version               = "14"
-  delegated_subnet_id   = azurerm_subnet.prod_database_subnet.id
-  private_dns_zone_id   = azurerm_private_dns_zone.prod_database_dns.id
+  version                = "13"
+  sku_name               = "Standard_D4s_v3"
+  storage_mb             = 65536 # 64 GB
+  backup_retention_days  = 35
+  geo_redundant_backup_enabled = true
+  zone                   = "1"
+  delegated_subnet_id    = azurerm_subnet.prod_database_subnet.id
+  private_dns_zone_id    = azurerm_private_dns_zone.prod_database_dns.id
   administrator_login    = "dbadmin"
   administrator_password = random_password.prod_db_admin_password.result
-
-  storage_mb = 524288  # 512GB for analytics
-  sku_name   = "GP_Standard_D8s_v3"  # High performance for analytics
-
-  backup_retention_days        = 35
-  geo_redundant_backup_enabled = true
-  high_availability_enabled    = true
+  public_network_access_enabled = false
 
   tags = {
-    Environment = "Production"
-    Purpose     = "Revenue Analytics & Forecasting"
-    Owner       = "analytics-team@company.com"
-    LastUsed    = "2025-06-24"  # Active usage
-    Criticality = "CRITICAL"
-    Scenario    = "LOGIC_HEAVY"
-    DataSize    = "Medium"
-    BusinessImpact = "Executive decision support, revenue forecasting"
-    RequiresManualReview = "true"
-    ComplianceRequirement = "Financial reporting"
+    DatabaseName = "lego"
+    Scenario     = "LOGIC_HEAVY"
+    Criticality  = "HIGH"
   }
-
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.prod_database_dns_link]
 }
 
 resource "azurerm_postgresql_flexible_server_database" "lego_db" {
   name      = "lego"
   server_id = azurerm_postgresql_flexible_server.lego.id
-  collation = "en_US.utf8"
-  charset   = "utf8"
+  charset   = "UTF8"
+  collation = "en_US.UTF8"
 }
 
-# Logic-Heavy Scenario: Postgres Air Database (Flight Operations)
+# Logic-Heavy Scenario: Postgres Air Database (Airline Operations)
 resource "azurerm_postgresql_flexible_server" "postgres_air" {
   name                   = "psql-postgres-air-prod"
   resource_group_name    = azurerm_resource_group.prod_critical_databases.name
   location              = azurerm_resource_group.prod_critical_databases.location
-  version               = "14"
-  delegated_subnet_id   = azurerm_subnet.prod_database_subnet.id
-  private_dns_zone_id   = azurerm_private_dns_zone.prod_database_dns.id
+  version                = "13"
+  sku_name               = "Standard_D4s_v3"
+  storage_mb             = 65536 # 64 GB
+  backup_retention_days  = 35
+  geo_redundant_backup_enabled = true
+  zone                   = "1"
+  delegated_subnet_id    = azurerm_subnet.prod_database_subnet.id
+  private_dns_zone_id    = azurerm_private_dns_zone.prod_database_dns.id
   administrator_login    = "dbadmin"
   administrator_password = random_password.prod_db_admin_password.result
-
-  storage_mb = 2097152  # 2TB for flight operations
-  sku_name   = "GP_Standard_D16s_v3"  # Very high performance
-
-  backup_retention_days        = 35
-  geo_redundant_backup_enabled = true
-  high_availability_enabled    = true
+  public_network_access_enabled = false
 
   tags = {
-    Environment = "Production"
-    Purpose     = "Flight Operations & Safety"
-    Owner       = "operations-team@company.com"
-    LastUsed    = "2025-06-24"  # Active usage
-    Criticality = "CRITICAL"
-    Scenario    = "LOGIC_HEAVY"
-    DataSize    = "Very Large"
-    BusinessImpact = "Flight safety, regulatory compliance"
-    RequiresManualReview = "true"
-    ComplianceRequirement = "FAA, EASA regulations"
-    SafetyCritical = "true"
+    DatabaseName = "postgres_air"
+    Scenario     = "LOGIC_HEAVY"
+    Criticality  = "HIGH"
   }
-
-  depends_on = [azurerm_private_dns_zone_virtual_network_link.prod_database_dns_link]
 }
 
 resource "azurerm_postgresql_flexible_server_database" "postgres_air_db" {
   name      = "postgres_air"
   server_id = azurerm_postgresql_flexible_server.postgres_air.id
-  collation = "en_US.utf8"
-  charset   = "utf8"
+  charset   = "UTF8"
+  collation = "en_US.UTF8"
 }
 
-# Production Network Infrastructure
+# Virtual Network and Subnet for Private Endpoint
 resource "azurerm_virtual_network" "prod_database_vnet" {
   name                = "vnet-databases-prod"
   location            = azurerm_resource_group.prod_critical_databases.location
   resource_group_name = azurerm_resource_group.prod_critical_databases.name
-  address_space       = ["10.1.0.0/16"]
-
-  tags = {
-    Environment = "Production"
-    Purpose     = "Critical Database Network"
-  }
+  address_space       = ["10.10.0.0/16"]
 }
 
 resource "azurerm_subnet" "prod_database_subnet" {
-  name                 = "snet-critical-databases"
+  name                 = "subnet-databases-prod"
   resource_group_name  = azurerm_resource_group.prod_critical_databases.name
   virtual_network_name = azurerm_virtual_network.prod_database_vnet.name
-  address_prefixes     = ["10.1.2.0/24"]
-  service_endpoints    = ["Microsoft.Storage"]
-
-  delegation {
-    name = "fs"
-    service_delegation {
+  address_prefixes     = ["10.10.1.0/24"]
+  service_delegation {
       name = "Microsoft.DBforPostgreSQL/flexibleServers"
       actions = [
         "Microsoft.Network/virtualNetworks/subnets/join/action",
