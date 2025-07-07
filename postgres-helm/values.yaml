@@ -1,7 +1,3 @@
-# Database periodic_table removed via automated decommission
-# Original references commented out for safety
-# Applied Windsurf rules from: .windsurf/rules/helm_refac.md
-
 # Default values for postgres-helm.
 
 replicaCount: 1
@@ -50,9 +46,6 @@ postgres:
   databases:
     - name: "chinook"
       file: "chinook.sql"
-
-    # REMOVED:     - name: "periodic_table"
-# REMOVED:       file: "periodic_table.sql"
     - name: "happiness_index"
       file: "happiness_index.sql"
     - name: "unused_db"
