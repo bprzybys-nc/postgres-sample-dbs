@@ -1,13 +1,17 @@
+# Database periodic_table removed via automated decommission
+# Original references commented out for safety
+# Applied Windsurf rules from: .windsurf/rules/helm_refac.md
+
 # monitoring/database-monitors/periodic_table_monitor.yaml
-# Datadog monitoring configuration for periodic_table database
+# Datadog monitoring configuration for # REMOVED: "periodic_table" database
 # Scenario: CONFIG_ONLY | Criticality: LOW
 
 api_version: v1
 kind: Monitor
 metadata:
-  name: "periodic_table-database-connection-monitor"
+  name: "# REMOVED: "periodic_table"-database-connection-monitor"
   tags:
-    - "database:periodic_table"
+    - "database:# REMOVED: "periodic_table""
     - "scenario:config_only"
     - "criticality:low"
     - "environment:multi"
@@ -19,14 +23,14 @@ spec:
   type: "query alert"
 
   query: |
-    max(last_30m):max:postgresql.connections.active{database:periodic_table} by {host}
+    max(last_30m):max:postgresql.connections.active{database:# REMOVED: "periodic_table"} by {host}
 
   name: "Periodic_Table Database - Unused Connection Alert"
 
   message: |
     **🔍 Database Decommissioning Candidate Detected**
 
-    Database: periodic_table
+    Database: # REMOVED: "periodic_table"
     Scenario Type: CONFIG_ONLY
     Criticality: LOW
 
@@ -44,90 +48,8 @@ spec:
     1. Verify no hidden dependencies
     2. Contact owner: chemistry-team@company.com
     3. Evaluate for removal
-    4. Document decision and rationale
-
-    **Infrastructure References:**
-    - Terraform: terraform/environments/*/{database_name}*
-    - Helm Charts: helm-charts/periodic_table/
-    - Monitoring: monitoring/database-monitors/periodic_table_monitor.yaml
-
-    @chemistry-team@company.com @database-team@company.com
-
-  # Alert thresholds
-  options:
-    thresholds:
-      critical: 2592000
-      warning: 1814400
-      warning_recovery: 1451520.0
-      critical_recovery: 2073600.0
-
-    # Notification settings
-    notify_audit: true
-    require_full_window: true
-    new_host_delay: 300
-    evaluation_delay: 900  # 15 minutes
-
-    # Escalation policy
-    escalation_message: |
-      **ESCALATION: Unused Database Alert**
-
-      Database periodic_table has been without connections for an extended period.
-      
-
-      Please review for potential decommissioning.
-
-    # Advanced configuration
-    include_tags: true
-    no_data_timeframe: 1440  # 24 hours
-    notify_no_data: true
-
-    # Silencing options for maintenance
-    silenced:
-      "*": null  # No permanent silencing
-
-  # Additional database-specific monitoring
-  additional_checks:
-    - name: "connection_count"
-      query: "avg(last_15m):avg:postgresql.connections.active{database:periodic_table}"
-      thresholds:
-        warning: 1
-        critical: 0
-
-    - name: "query_activity" 
-      query: "sum(last_1h):sum:postgresql.queries.count{database:periodic_table}"
-      thresholds:
-        warning: 10
-        critical: 0
-
-    - name: "last_activity"
-      query: "max(last_24h):max:postgresql.activity.last_query_time{database:periodic_table}"
-      thresholds:
-        critical: 2592000
-
-# Custom metrics for decommissioning workflow
-custom_metrics:
-  - metric_name: "database.decommissioning.candidate"
-    description: "Flag database as decommissioning candidate"
-    tags:
-      - "database:periodic_table"
-      - "scenario:config_only"
-      - "auto_review:true"
-      - "manual_review:false"
-
-  - metric_name: "database.connection.idle_days"
-    description: "Number of days since last connection"
-    unit: "days"
-    tags:
-      - "database:periodic_table"
-      - "threshold_days:30"
-
-# Dashboard integration
-dashboard_widgets:
-  - widget_type: "timeseries"
-    title: "Periodic_Table Connection Activity"
-    definition:
-      requests:
-        - q: "avg:postgresql.connections.active{database:periodic_table}"
+    4. Document decision and ra
+gresql.connections.active{database:# REMOVED: "periodic_table"}"
           display_type: "line"
       yaxis:
         min: 0
@@ -141,10 +63,10 @@ dashboard_widgets:
 github_integration:
   repository: "company/database-decommissioning"
   issue_template: |
-    ## Database Decommissioning Review: periodic_table
+    ## Database Decommissioning Review: # REMOVED: "periodic_table"
 
     **Database Information:**
-    - Name: periodic_table
+    - Name: # REMOVED: "periodic_table"
     - Scenario: CONFIG_ONLY
     - Criticality: LOW
     - Owner: chemistry-team@company.com
@@ -169,7 +91,7 @@ webhooks:
     url: "https://automation.company.com/database-decommissioning/webhook"
     payload: |
       {
-        "database_name": "periodic_table",
+        "database_name": "# REMOVED: "periodic_table"",
         "scenario_type": "CONFIG_ONLY",
         "criticality": "LOW",
         "owner_email": "chemistry-team@company.com",
