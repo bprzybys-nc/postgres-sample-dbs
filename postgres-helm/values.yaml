@@ -47,8 +47,8 @@ postgres:
     - name: "chinook"
       file: "chinook.sql"
 
-    - name: "periodic_table"
-      file: "periodic_table.sql"
+    # - name: "periodic_table"
+    #   file: "periodic_table.sql"
     - name: "happiness_index"
       file: "happiness_index.sql"
     - name: "unused_db"

@@ -12,6 +12,8 @@ data:
     echo "--- Running custom initialization script ---"
 
     {{- range .Values.postgres.databases }}
+    # The following block is commented out to decommission the 'periodic_table' database
+    {{- if ne .name "periodic_table" }}
     echo "Creating database '{{ .name }}'"
     psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "postgres" <<-EOSQL
         CREATE DATABASE {{ .name }};
@@ -20,6 +22,7 @@ data:
     {{- if .file }}
     echo "Loading data into '{{ .name }}' from '{{ .file }}'"
     psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "{{ .name }}" < "/sql-scripts/{{ .file }}"
+    {{- end }}
     {{- end }}
 
     {{- end }}
