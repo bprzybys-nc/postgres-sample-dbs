@@ -57,342 +57,118 @@ usage() {
     echo "  all      - Deploy all environments"
     echo ""
     echo "Options:"
-    echo "  --validate-only   Run validation only, no deployment"
-    echo "  --skip-validation Skip scenario validation"
-    echo "  --dry-run        Show what would be deployed"
-    echo "  --force          Force deployment even with warnings"
-    echo "  --help           Show this help message"
+    echo "  --skip-validation  Skip the validation step"
+    echo "  --validate-only    Only run the validation step and exit"
+    echo "  --dry-run          Perform a dry run without actual deployments"
+    echo "  -h, --help         Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0 dev                    # Deploy development environment"
-    echo "  $0 staging --dry-run      # Preview staging deployment"
-    echo "  $0 all --validate-only    # Validate all scenarios"
+    echo "  $0 dev"
+    echo "  $0 all --skip-validation"
+    echo "  $0 prod --dry-run"
+    echo "  $0 staging --validate-only"
+    exit 1
 }
 
-# Check prerequisites
+# Function to check prerequisites (Terraform, Azure CLI, Helm)
 check_prerequisites() {
-    info "Checking deployment prerequisites..."
-
-    # Check required tools
-    local tools=("terraform" "az" "helm" "docker" "python3")
-    for tool in "${tools[@]}"; do
-        if ! command -v "$tool" &> /dev/null; then
-            error "$tool is required but not installed"
-        fi
-    done
-
-    # Check Azure authentication
-    if ! az account show &> /dev/null; then
-        error "Azure CLI not authenticated. Run 'az login' first."
-    fi
-
-    # Check required environment variables
-    local env_vars=("ARM_SUBSCRIPTION_ID")
-    for var in "${env_vars[@]}"; do
-        if [[ -z "${!var:-}" ]]; then
-            warning "Environment variable $var is not set"
-        fi
-    done
-
-    success "Prerequisites check completed"
+    info "Checking prerequisites..."
+    command -v terraform >/dev/null 2>&1 || error "Terraform is not installed. Please install it to proceed."
+    command -v az >/dev/null 2>&1 || error "Azure CLI is not installed. Please install it to proceed."
+    command -v helm >/dev/null 2>&1 || error "Helm is not installed. Please install it to proceed."
+    success "All prerequisites are met."
 }
 
-# Validate scenarios
+# Function to validate scenarios using script_11.py
 validate_scenarios() {
-    info "Validating database scenarios..."
-
-    cd "$REPO_ROOT"
-    if python3 test_scenarios_validation.py; then
-        success "Scenario validation passed"
-        return 0
-    else
-        error "Scenario validation failed. Fix issues before deployment."
-        return 1
-    fi
+    info "Validating scenarios..."
+    python3 "$SCRIPT_DIR/script_11.py"
+    success "Scenario validation completed."
 }
 
-# Deploy development environment (Config-Only)
+# Function to deploy development environment databases
 deploy_dev() {
-    info "Deploying development environment (Config-Only scenarios)..."
-
-    local tf_dir="$REPO_ROOT/terraform/environments/dev"
-
-    if [[ ! -f "${tf_dir}/databases.tf" ]]; then
-        # Copy our generated file to the expected location
-        mkdir -p "$tf_dir"
-        cp "$REPO_ROOT/terraform_dev_databases.tf" "${tf_dir}/databases.tf"
+    info "Deploying development environment databases..."
+    if [[ "$dry_run" == "true" ]]; then
+        warning "Dry run: Skipping actual deployment for dev environment."
+        return
     fi
 
-    cd "$tf_dir"
+    # Run script_1.py to generate terraform_dev_databases.tf
+    info "Generating terraform_dev_databases.tf using script_1.py..."
+    python3 "$SCRIPT_DIR/script_1.py"
 
-    # Initialize Terraform
-    info "Initializing Terraform..."
-    terraform init
-
-    # Plan deployment
-    info "Planning Terraform deployment..."
-    terraform plan \
-        -var="admin_password=${DB_ADMIN_PASSWORD:-$(openssl rand -base64 32)}" \
-        -out=dev.tfplan
-
-    if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        info "Dry run completed. Plan saved to dev.tfplan"
-        return 0
-    fi
-
-    # Apply deployment
-    info "Applying Terraform configuration..."
-    terraform apply dev.tfplan
-
-    # Deploy monitoring
-    deploy_monitoring "dev" "periodic_table world_happiness titanic"
-
-    success "Development environment deployed successfully"
+    # Initialize and apply Terraform
+    info "Initializing Terraform for dev environment..."
+    terraform -chdir="$REPO_ROOT" init -backend-config="backend.azurerm.tfvars" -reconfigure
+    info "Applying Terraform for dev environment..."
+    terraform -chdir="$REPO_ROOT" apply -auto-approve -var-file="dev.tfvars"
+    success "Development environment databases deployed."
 }
 
-# Deploy staging environment (Mixed scenarios)
+# Function to deploy staging environment databases
 deploy_staging() {
-    info "Deploying staging environment (Mixed scenarios)..."
-
-    # Create staging Terraform configuration
-    local tf_dir="$REPO_ROOT/terraform/environments/staging"
-    mkdir -p "$tf_dir"
-
-    # Generate staging config (simplified for demo)
-    cat > "${tf_dir}/main.tf" << EOF
-# Staging environment for Mixed scenarios
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~>3.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {}
-}
-
-# Mixed scenario databases: pagila, chinook, netflix
-# (Implementation would be similar to dev but with different configs)
-EOF
-
-    cd "$tf_dir"
-    terraform init
-
-    if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        info "Dry run - staging Terraform configuration created"
-        return 0
+    info "Deploying staging environment databases..."
+    if [[ "$dry_run" == "true" ]]; then
+        warning "Dry run: Skipping actual deployment for staging environment."
+        return
     fi
 
-    # Deploy service layer
-    deploy_service_layer
+    # Run script_2.py to generate terraform_staging_mixed_databases.tf
+    info "Generating terraform_staging_mixed_databases.tf using script_2.py..."
+    python3 "$SCRIPT_DIR/script_2.py"
 
-    # Deploy monitoring
-    deploy_monitoring "staging" "pagila chinook netflix"
-
-    success "Staging environment deployed successfully"
+    # Initialize and apply Terraform
+    info "Initializing Terraform for staging environment..."
+    terraform -chdir="$REPO_ROOT" init -backend-config="backend.azurerm.tfvars" -reconfigure
+    info "Applying Terraform for staging environment..."
+    terraform -chdir="$REPO_ROOT" apply -auto-approve -var-file="staging.tfvars"
+    success "Staging environment databases deployed."
 }
 
-# Deploy production environment (Logic-Heavy)
+# Function to deploy production environment databases
 deploy_prod() {
-    info "Deploying production environment (Logic-Heavy scenarios)..."
+    info "Deploying production environment databases..."
+    if [[ "$dry_run" == "true" ]]; then
+        warning "Dry run: Skipping actual deployment for prod environment."
+        return
+    }
 
-    # Production deployment requires additional approvals
-    warning "Production deployment requires executive approval"
+    # Run script_3.py to generate terraform_prod_critical_databases.tf
+    info "Generating terraform_prod_critical_databases.tf using script_3.py..."
+    python3 "$SCRIPT_DIR/script_3.py"
 
-    if [[ "${FORCE:-false}" != "true" ]]; then
-        read -p "Are you authorized to deploy to production? (yes/no): " -r
-        if [[ ! $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
-            error "Production deployment cancelled"
-        fi
-    fi
-
-    local tf_dir="$REPO_ROOT/terraform/environments/prod"
-
-    if [[ ! -f "${tf_dir}/critical_databases.tf" ]]; then
-        mkdir -p "$tf_dir"
-        cp "$REPO_ROOT/terraform_prod_critical_databases.tf" "${tf_dir}/critical_databases.tf"
-    fi
-
-    cd "$tf_dir"
-    terraform init
-
-    if [[ "${DRY_RUN:-false}" == "true" ]]; then
-        terraform plan \
-            -var="admin_password=${DB_ADMIN_PASSWORD:-$(openssl rand -base64 32)}"
-        info "Production deployment plan completed"
-        return 0
-    fi
-
-    # Deploy critical systems
-    deploy_critical_systems
-
-    # Deploy monitoring
-    deploy_monitoring "prod" "employees lego postgres_air"
-
-    success "Production environment deployed successfully"
+    # Initialize and apply Terraform
+    info "Initializing Terraform for prod environment..."
+    terraform -chdir="$REPO_ROOT" init -backend-config="backend.azurerm.tfvars" -reconfigure
+    info "Applying Terraform for prod environment..."
+    terraform -chdir="$REPO_ROOT" apply -auto-approve -var-file="prod.tfvars"
+    success "Production environment databases deployed."
 }
 
-# Deploy service layer for mixed scenarios
-deploy_service_layer() {
-    info "Deploying service layer applications..."
-
-    # Create docker-compose for service layer
-    cat > "$REPO_ROOT/docker-compose.services.yml" << EOF
-version: '3.8'
-services:
-  database-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.services
-    environment:
-      - ENVIRONMENT=staging
-      - PAGILA_DB_HOST=\${PAGILA_DB_HOST}
-      - CHINOOK_DB_HOST=\${CHINOOK_DB_HOST}
-      - NETFLIX_DB_HOST=\${NETFLIX_DB_HOST}
-    ports:
-      - "8080:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-EOF
-
-    if command -v docker-compose &> /dev/null; then
-        cd "$REPO_ROOT"
-        docker-compose -f docker-compose.services.yml up -d
-        success "Service layer deployed"
-    else
-        warning "Docker Compose not available, skipping service layer deployment"
-    fi
-}
-
-# Deploy critical systems for logic-heavy scenarios  
-deploy_critical_systems() {
-    info "Deploying critical business systems..."
-
-    # Deploy business logic applications
-    if command -v kubectl &> /dev/null; then
-        # Create Kubernetes deployments
-        kubectl create namespace business-systems 2>/dev/null || true
-
-        # Deploy payroll system
-        helm upgrade --install employees-payroll \
-            "$REPO_ROOT/helm-charts/employees/" \
-            --namespace business-systems \
-            --wait
-
-        # Deploy analytics system
-        helm upgrade --install lego-analytics \
-            "$REPO_ROOT/helm-charts/lego/" \
-            --namespace business-systems \
-            --wait
-
-        success "Critical systems deployed to Kubernetes"
-    else
-        warning "kubectl not available, skipping Kubernetes deployment"
-    fi
-}
-
-# Deploy monitoring configurations
-deploy_monitoring() {
-    local environment=$1
-    local databases=$2
-
-    info "Deploying monitoring for $environment environment..."
-
-    if command -v kubectl &> /dev/null; then
-        kubectl create namespace monitoring 2>/dev/null || true
-
-        for db in $databases; do
-            if [[ -f "$REPO_ROOT/datadog_monitor_${db}.yaml" ]]; then
-                kubectl apply -f "$REPO_ROOT/datadog_monitor_${db}.yaml" -n monitoring
-            fi
-        done
-
-        success "Monitoring configurations deployed"
-    else
-        warning "kubectl not available, skipping monitoring deployment"
-    fi
-}
-
-# Generate deployment report
-generate_report() {
-    local environment=$1
-
-    info "Generating deployment report for $environment..."
-
-    cat > "$REPO_ROOT/deployment_report_${environment}.md" << EOF
-# Deployment Report - $environment Environment
-
-**Deployment Date:** $(date)
-**Environment:** $environment
-**Deployed By:** $(whoami)
-
-## Deployment Summary
-
-$(case $environment in
-    dev) echo "- Deployed Config-Only scenarios: periodic_table, world_happiness, titanic";;
-    staging) echo "- Deployed Mixed scenarios: pagila, chinook, netflix";;  
-    prod) echo "- Deployed Logic-Heavy scenarios: employees, lego, postgres_air";;
-    all) echo "- Deployed all scenarios across dev, staging, and prod environments";;
-esac)
-
-## Infrastructure Deployed
-
-- Terraform configurations applied
-- Database servers provisioned
-- Monitoring alerts configured
-- $(if [[ "$environment" != "dev" ]]; then echo "Service layer deployed"; fi)
-
-## Next Steps
-
-1. Verify database connectivity
-2. Run scenario validation: \`python test_scenarios_validation.py\`
-3. Monitor Datadog alerts
-4. Test decommissioning workflow
-
-## Support
-
-For issues, contact: database-team@company.com
-EOF
-
-    success "Deployment report generated: deployment_report_${environment}.md"
-}
-
-# Main deployment function
+# Main function to parse arguments and execute deployment
 main() {
-    local environment="${1:-}"
-    local validate_only=false
-    local skip_validation=false
-    local dry_run=false
-    local force=false
+    local environment=""
+    local skip_validation="false"
+    local validate_only="false"
+    local dry_run="false"
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
-        case $1 in
-            --validate-only)
-                validate_only=true
+        case "$1" in
+            --skip-validation)
+                skip_validation="true"
                 shift
                 ;;
-            --skip-validation)
-                skip_validation=true
+            --validate-only)
+                validate_only="true"
                 shift
                 ;;
             --dry-run)
-                dry_run=true
-                export DRY_RUN=true
+                dry_run="true"
                 shift
                 ;;
-            --force)
-                force=true
-                export FORCE=true
-                shift
-                ;;
-            --help)
+            -h|--help)
                 usage
                 exit 0
                 ;;
