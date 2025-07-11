@@ -124,8 +124,8 @@ resource "azurerm_postgresql_flexible_server_database" "lego_db" {
 }
 
 # Logic-Heavy Scenario: Postgres Air Database (Flight Operations)
-resource "azurerm_postgresql_flexible_server" "postgres_air" {
-  name                   = "psql-postgres-air-prod"
+-- resource "azurerm_postgresql_flexible_server" "postgres_air" {
+  name                   = "psql-postgres_air-prod"
   resource_group_name    = azurerm_resource_group.prod_critical_databases.name
   location              = azurerm_resource_group.prod_critical_databases.location
   version               = "14"
