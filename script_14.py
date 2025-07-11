@@ -231,7 +231,7 @@ deploy_prod() {
     deploy_critical_systems
     
     # Deploy monitoring
-    deploy_monitoring "prod" "employees lego postgres_air"
+#     deploy_monitoring "prod" "employees lego postgres_air"
     
     success "Production environment deployed successfully"
 }
@@ -338,7 +338,7 @@ generate_report() {
 $(case $environment in
     dev) echo "- Deployed Config-Only scenarios: periodic_table, world_happiness, titanic";;
     staging) echo "- Deployed Mixed scenarios: pagila, chinook, netflix";;  
-    prod) echo "- Deployed Logic-Heavy scenarios: employees, lego, postgres_air";;
+#     prod) echo "- Deployed Logic-Heavy scenarios: employees, lego, postgres_air";;
     all) echo "- Deployed all scenarios across dev, staging, and prod environments";;
 esac)
 
