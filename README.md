@@ -36,7 +36,8 @@ get https://raw.githubusercontent.com/danieltprice/postgres-sample-dbs/main/<dum
 ## Prerequisites
 
 - A `psql` client for connecting to your Neon database and loading data. This client is included with a standalone PostgreSQL installation. See [PostgreSQL Downloads](https://www.postgresql.org/download/).
-- A `pg_restore` client if you are loading the [employees](#employees-database) or [postgres_air](#postgres-air-database) database. The `pg_restore` client is also included with a standalone PostgreSQL installation. See [PostgreSQL Downloads](https://www.postgresql.org/download/).
+# DEPRECATED: postgres_air database has been decommissioned
+- A `pg_restore` client if you are loading the [employees](#employees-database) or [postgres_air](#postgres_air-database) database. The `pg_restore` client is also included with a standalone PostgreSQL installation. See [PostgreSQL Downloads](https://www.postgresql.org/download/).
 - A Neon database connection string to load data and connect to your database. After creating a database, you can obtain the connection string from the **Connection Details** widget on the Neon **Dashboard**. In the instructions that follow, replace `postgres://<user>:<password>@<hostname>/[dbname]` with your Neon database connection string. For further information, see [Connect from any application](https://neon.tech/docs/connect/connect-from-any-app).
 - Instructions for each dataset require that you create a database. You can do so from a client such as `psql` or from the [Neon SQL Editor](https://neon.tech/docs/get-started-with-neon/query-with-neon-sql-editor).
 - A Neon [Pro](/https://neon.tech/docs/introduction/pro-plan) account is required to install datasets larger than 3 GBs.
@@ -56,7 +57,8 @@ Sample datasets are listed in order of the smallest to largest installed size. P
 | [Lego database](#lego-database)                     | 8      | 633250  | 13 MB                 | 42 MB          |
 | [Employees database](#employees-database)           | 6      | 3919015 | 34 MB                 | 333 MB         |
 | [Wikipedia vector embeddings](#wikipedia-vector-embeddings) | 1    | 25000    | 1.7 GB         | 850 MB         |
-| [Postgres air](#postgres-air-database)              | 10     | 67228600 | 1.2 GB               | 6.7 GB         |
+# DEPRECATED: postgres_air database has been decommissioned
+| [Postgres air](#postgres_air-database)              | 10     | 67228600 | 1.2 GB               | 6.7 GB         |
 
 <Admonition type="note">
 Installed size is measured using the query: `SELECT pg_size_pretty(pg_database_size('your_database_name'))`. The reported size for small datasets may appear larger than expected due to inherent Postgres storage overhead.
