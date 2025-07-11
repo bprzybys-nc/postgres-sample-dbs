@@ -209,6 +209,7 @@ databases_config = [
     # Logic-Heavy scenarios
     ("employees", "LOGIC_HEAVY", "hr-team@company.com", "CRITICAL"),
     ("lego", "LOGIC_HEAVY", "analytics-team@company.com", "CRITICAL"),
+# DEPRECATED: postgres_air database has been decommissioned
     ("postgres_air", "LOGIC_HEAVY", "operations-team@company.com", "CRITICAL"),
 ]
 
