@@ -1,12 +1,17 @@
+# DEPRECATED: postgres_air database has been decommissioned
 # monitoring/database-monitors/postgres_air_monitor.yaml
+# DEPRECATED: postgres_air database has been decommissioned
 # Datadog monitoring configuration for postgres_air database
 # Scenario: LOGIC_HEAVY | Criticality: CRITICAL
 
 api_version: v1
 kind: Monitor
 metadata:
+# DEPRECATED: postgres_air database has been decommissioned
   name: "postgres_air-database-connection-monitor"
   tags:
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
     - "database:postgres_air"
     - "scenario:logic_heavy"
     - "criticality:critical"
@@ -19,13 +24,16 @@ spec:
   type: "query alert"
 
   query: |
+# DEPRECATED: postgres_air database has been decommissioned
     max(last_30m):max:postgresql.connections.active{database:postgres_air} by {host}
 
+# DEPRECATED: postgres_air database has been decommissioned
   name: "Postgres_Air Database - Unused Connection Alert"
 
   message: |
     **🔍 Database Decommissioning Candidate Detected**
 
+# DEPRECATED: postgres_air database has been decommissioned
     Database: postgres_air
     Scenario Type: LOGIC_HEAVY
     Criticality: CRITICAL
@@ -48,7 +56,11 @@ spec:
 
     **Infrastructure References:**
     - Terraform: terraform/environments/*/{database_name}*
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
     - Helm Charts: helm-charts/postgres_air/
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
     - Monitoring: monitoring/database-monitors/postgres_air_monitor.yaml
 
     @operations-team@company.com @database-team@company.com
@@ -71,6 +83,7 @@ spec:
     escalation_message: |
       **ESCALATION: Unused Database Alert**
 
+# DEPRECATED: postgres_air database has been decommissioned
       Database postgres_air has been without connections for an extended period.
       This is a CRITICAL system requiring immediate review.
 
@@ -88,18 +101,21 @@ spec:
   # Additional database-specific monitoring
   additional_checks:
     - name: "connection_count"
+# DEPRECATED: postgres_air database has been decommissioned
       query: "avg(last_15m):avg:postgresql.connections.active{database:postgres_air}"
       thresholds:
         warning: 1
         critical: 0
 
     - name: "query_activity" 
+# DEPRECATED: postgres_air database has been decommissioned
       query: "sum(last_1h):sum:postgresql.queries.count{database:postgres_air}"
       thresholds:
         warning: 10
         critical: 0
 
     - name: "last_activity"
+# DEPRECATED: postgres_air database has been decommissioned
       query: "max(last_24h):max:postgresql.activity.last_query_time{database:postgres_air}"
       thresholds:
         critical: 86400
@@ -109,6 +125,8 @@ custom_metrics:
   - metric_name: "database.decommissioning.candidate"
     description: "Flag database as decommissioning candidate"
     tags:
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
       - "database:postgres_air"
       - "scenario:logic_heavy"
       - "auto_review:false"
@@ -118,15 +136,20 @@ custom_metrics:
     description: "Number of days since last connection"
     unit: "days"
     tags:
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
       - "database:postgres_air"
       - "threshold_days:1"
 
 # Dashboard integration
 dashboard_widgets:
   - widget_type: "timeseries"
+# DEPRECATED: postgres_air database has been decommissioned
     title: "Postgres_Air Connection Activity"
     definition:
       requests:
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
         - q: "avg:postgresql.connections.active{database:postgres_air}"
           display_type: "line"
       yaxis:
@@ -141,9 +164,12 @@ dashboard_widgets:
 github_integration:
   repository: "company/database-decommissioning"
   issue_template: |
+# DEPRECATED: postgres_air database has been decommissioned
     ## Database Decommissioning Review: postgres_air
 
     **Database Information:**
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
     - Name: postgres_air
     - Scenario: LOGIC_HEAVY
     - Criticality: CRITICAL
@@ -169,6 +195,8 @@ webhooks:
     url: "https://automation.company.com/database-decommissioning/webhook"
     payload: |
       {
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
         "database_name": "postgres_air",
         "scenario_type": "LOGIC_HEAVY",
         "criticality": "CRITICAL",
