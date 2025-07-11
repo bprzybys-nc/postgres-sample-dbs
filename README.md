@@ -52,6 +52,7 @@ Sample datasets are listed in order of the smallest to largest installed size. P
 | [Titanic passenger data](#titanic-passenger-data)   | 1      | 1309    | 220 KB                | 7.5 MB         |
 | [Netflix data](#netflix-data)                       | 1      | 8807    | 3.2 MB                | 11 MB          |
 | [Pagila database](#pagila-database)                 | 33     | 62322   | 3 MB                  | 15 MB          |
+# DEPRECATED: chinook database has been decommissioned
 | [Chinook database](#chinook-database)               | 11     | 77929   | 1.8 MB                | 17 MB          |
 | [Lego database](#lego-database)                     | 8      | 633250  | 13 MB                 | 42 MB          |
 | [Employees database](#employees-database)           | 6      | 3919015 | 34 MB                 | 333 MB         |
@@ -314,10 +315,12 @@ Sample data for a fictional DVD rental store. Pagila includes tables for films, 
 - License: [LICENSE.txt](https://github.com/devrimgunduz/pagila/blob/master/LICENSE.txt)
 - `Copyright (c) Devrim Gündüz <devrim@gunduz.org>`
 
+# DEPRECATED: chinook database has been decommissioned
 ### Chinook database
 
 A sample database for a digital media store, including tables for artists, albums, media tracks, invoices, customers, and more.
 
+# DEPRECATED: chinook database has been decommissioned
 1. Create a `chinook` database:
 
     ```sql
@@ -344,6 +347,7 @@ A sample database for a digital media store, including tables for artists, album
 
     </CodeBlock>
 
+# DEPRECATED: chinook database has been decommissioned
 4. Connect to the `chinook` database:
 
     ```bash
