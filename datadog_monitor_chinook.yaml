@@ -1,4 +1,6 @@
+# DEPRECATED: chinook database has been decommissioned
 # monitoring/database-monitors/chinook_monitor.yaml
+# DEPRECATED: chinook database has been decommissioned
 # Datadog monitoring configuration for chinook database
 # Scenario: MIXED | Criticality: MEDIUM
 
@@ -141,6 +143,7 @@ dashboard_widgets:
 github_integration:
   repository: "company/database-decommissioning"
   issue_template: |
+# DEPRECATED: chinook database has been decommissioned
     ## Database Decommissioning Review: chinook
 
     **Database Information:**
