@@ -1,10 +1,13 @@
+# DEPRECATED: postgres_air database has been decommissioned
 # helm-charts/postgres_air/values.yaml
+# DEPRECATED: postgres_air database has been decommissioned
 # Kubernetes deployment configuration for postgres_air database
 # Scenario: LOGIC_HEAVY | Criticality: CRITICAL
 
 # Global configuration
 global:
   database:
+# DEPRECATED: postgres_air database has been decommissioned
     name: "postgres_air"
     scenario: "logic_heavy"
     criticality: "critical"
