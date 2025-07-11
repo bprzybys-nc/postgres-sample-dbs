@@ -16,6 +16,8 @@ This document provides comprehensive ownership information for all databases in 
 | netflix | MIXED | MEDIUM | Content Team | content-team@company.com | 2024-05-10 | MEDIUM |
 | employees | LOGIC_HEAVY | CRITICAL | HR Team | hr-team@company.com | 2025-06-24 | LOW |
 | lego | LOGIC_HEAVY | CRITICAL | Analytics Team | analytics-team@company.com | 2025-06-24 | LOW |
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
 | postgres_air | LOGIC_HEAVY | CRITICAL | Operations Team | operations-team@company.com | 2025-06-24 | LOW |
 
 ## Scenario Type Definitions
@@ -59,6 +61,8 @@ This document provides comprehensive ownership information for all databases in 
 - Requires manual review and executive approval
 - High business impact
 
+# DEPRECATED: postgres_air database has been decommissioned - update test/example data
+# DEPRECATED: postgres_air database has been decommissioned - update test/example data
 **Examples:** employees, lego, postgres_air
 
 **Decommissioning Process:**
@@ -131,6 +135,8 @@ This document provides comprehensive ownership information for all databases in 
 - **Primary Contact:** Thomas White (thomas.white@company.com)
 - **Secondary Contact:** Nancy Taylor (nancy.taylor@company.com)
 - **Slack Channel:** #operations
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
 - **Databases:** postgres_air
 - **Business Impact:** CRITICAL - Flight safety and regulatory compliance
 - **Approval Authority:** Chief Operations Officer (Thomas White)
