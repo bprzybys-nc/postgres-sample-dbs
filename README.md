@@ -36,6 +36,8 @@ get https://raw.githubusercontent.com/danieltprice/postgres-sample-dbs/main/<dum
 ## Prerequisites
 
 - A `psql` client for connecting to your Neon database and loading data. This client is included with a standalone PostgreSQL installation. See [PostgreSQL Downloads](https://www.postgresql.org/download/).
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
 - A `pg_restore` client if you are loading the [employees](#employees-database) or [postgres_air](#postgres-air-database) database. The `pg_restore` client is also included with a standalone PostgreSQL installation. See [PostgreSQL Downloads](https://www.postgresql.org/download/).
 - A Neon database connection string to load data and connect to your database. After creating a database, you can obtain the connection string from the **Connection Details** widget on the Neon **Dashboard**. In the instructions that follow, replace `postgres://<user>:<password>@<hostname>/[dbname]` with your Neon database connection string. For further information, see [Connect from any application](https://neon.tech/docs/connect/connect-from-any-app).
 - Instructions for each dataset require that you create a database. You can do so from a client such as `psql` or from the [Neon SQL Editor](https://neon.tech/docs/get-started-with-neon/query-with-neon-sql-editor).
