@@ -142,7 +142,7 @@ terraform apply
 kubectl apply -f k8s/critical-systems/
 helm upgrade --install employees-system helm-charts/employees/
 helm upgrade --install lego-analytics helm-charts/lego/
-helm upgrade --install postgres-air helm-charts/postgres_air/
+# helm upgrade --install postgres-air helm-charts/postgres_air/
 ```
 
 **Expected Infrastructure:**
