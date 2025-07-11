@@ -1,4 +1,6 @@
+# DEPRECATED: postgres_air database has been decommissioned
 # monitoring/database-monitors/postgres_air_monitor.yaml
+# DEPRECATED: postgres_air database has been decommissioned
 # Datadog monitoring configuration for postgres_air database
 # Scenario: LOGIC_HEAVY | Criticality: CRITICAL
 
@@ -141,6 +143,7 @@ dashboard_widgets:
 github_integration:
   repository: "company/database-decommissioning"
   issue_template: |
+# DEPRECATED: postgres_air database has been decommissioned
     ## Database Decommissioning Review: postgres_air
 
     **Database Information:**
