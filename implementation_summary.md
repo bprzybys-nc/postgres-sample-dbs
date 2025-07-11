@@ -87,6 +87,8 @@ Successfully implemented comprehensive test scenarios for the postgres-sample-db
 | netflix | MIXED | MEDIUM | Content | ✅ Terraform + Helm | ✅ Service Layer | ❌ None |
 | employees | LOGIC_HEAVY | CRITICAL | HR | ✅ Terraform + Helm | ✅ Service Layer | ✅ Payroll System |
 | lego | LOGIC_HEAVY | CRITICAL | Analytics | ✅ Terraform + Helm | ✅ Service Layer | ✅ Revenue Analytics |
+# DEPRECATED: postgres_air database has been decommissioned
+# DEPRECATED: postgres_air database has been decommissioned
 | postgres_air | LOGIC_HEAVY | CRITICAL | Operations | ✅ Terraform + Helm | ✅ Service Layer | ✅ Flight Operations |
 
 ## Quality Assurance
