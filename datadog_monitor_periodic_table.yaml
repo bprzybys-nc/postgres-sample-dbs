@@ -1,4 +1,6 @@
+# DEPRECATED: periodic_table database has been decommissioned
 # monitoring/database-monitors/periodic_table_monitor.yaml
+# DEPRECATED: periodic_table database has been decommissioned
 # Datadog monitoring configuration for periodic_table database
 # Scenario: CONFIG_ONLY | Criticality: LOW
 
@@ -141,6 +143,7 @@ dashboard_widgets:
 github_integration:
   repository: "company/database-decommissioning"
   issue_template: |
+# DEPRECATED: periodic_table database has been decommissioned
     ## Database Decommissioning Review: periodic_table
 
     **Database Information:**

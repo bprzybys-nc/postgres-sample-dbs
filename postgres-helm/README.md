@@ -29,6 +29,7 @@ The following table lists the configurable parameters of the PostgreSQL chart an
 | `service.port`           | Kubernetes service port                         | `5432`                                                                                                  |
 | `postgres.user`          | PostgreSQL user                                 | `postgres`                                                                                              |
 | `postgres.password`      | PostgreSQL password                             | `postgres`                                                                                              |
+# DEPRECATED: periodic_table database has been decommissioned
 | `postgres.databases`     | List of databases to create                     | `chinook`, `pagila`, `periodic_table`, `happiness_index`, `unused_db`                                     |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.

@@ -41,7 +41,7 @@ resource "random_password" "db_admin_password" {
 }
 
 # Config-Only Scenario: Periodic Table Database
-resource "azurerm_postgresql_flexible_server" "periodic_table" {
+-- resource "azurerm_postgresql_flexible_server" "periodic_table" {
   name                   = "psql-periodic-table-dev"
   resource_group_name    = azurerm_resource_group.dev_databases.name
   location              = azurerm_resource_group.dev_databases.location
