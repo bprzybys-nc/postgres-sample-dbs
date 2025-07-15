@@ -1,0 +1,15 @@
+# DECOMMISSIONED 2025-07-15: postgres_air
+# Strategy: configuration
+# Ticket: DB-DECOMM-001
+# Contact: ops-team@company.com
+# Original content preserved below (commented)
+
+database:
+#   name: postgres_air
+  host: prod-postgres-air.example.com
+  port: 5432
+#   username: postgres_air_prod
+#   password: ${POSTGRES_AIR_PASSWORD}
+  
+redis:
+  url: redis://redis-postgres-air:6379
