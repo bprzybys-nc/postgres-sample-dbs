@@ -1,0 +1,10 @@
+# DECOMMISSIONED 2025-07-15: postgres_air
+# Strategy: configuration
+# Ticket: DB-DECOMM-001
+# Contact: ops-team@company.com
+# Original content preserved below (commented)
+
+production:
+#   database: postgres_air
+  host: localhost
+  port: 5432
